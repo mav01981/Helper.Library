@@ -7,18 +7,44 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Files\SampleA.csv" />
+    <None Remove="Files\SampleB.csv" />
+    <None Remove="Files\TextFile1.txt" />
+    <None Remove="Files\Untitled Document.pdf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Files\SampleB.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\SampleA.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\TextFile1.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\Untitled Document.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
     <PackageReference Include="xunit" Version="2.4.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Output\" />
     <Folder Include="Web\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Helper.CSV\Helper.CSV.csproj" />
     <ProjectReference Include="..\Helper.Reflection\Helper.Reflection.csproj" />
+    <ProjectReference Include="..\Helper.Socket\Helper.Socket.csproj" />
+    <ProjectReference Include="..\Helpers.FileConvertor\Helper.Serialization.csproj" />
     <ProjectReference Include="..\ThreadHelper\Helper.Thread.csproj" />
   </ItemGroup>
 

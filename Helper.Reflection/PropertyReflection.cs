@@ -115,7 +115,14 @@ namespace Helper.Reflection
                 PropertyInfo propertyToGet = target.GetType().GetProperty(bits[i]);
                 target = propertyToGet.GetValue(target, null);
             }
+            
             PropertyInfo propertyToSet = target.GetType().GetProperty(bits.Last());
+
+            if (propertyToSet.PropertyType == typeof(int))
+            {
+                value = Convert.ToInt32(value);
+            }
+
             propertyToSet.SetValue(target, value, null);
         }
     }

@@ -38,38 +38,65 @@ namespace Helper.Reflection
                 }
             }
         }
+
+        private static void CreateObject<T>(object obj)
+        {
+            Type objectType = obj.GetType();
+
+            IList<PropertyInfo> props = new List<PropertyInfo>(objectType.GetProperties());
+
+            foreach (PropertyInfo prop in props)
+            {
+                if (!prop.PropertyType.IsValueType && prop.PropertyType != typeof(string))
+                {
+                    prop.SetValue(obj, Activator.CreateInstance(prop.PropertyType));
+                }
+            }
+        }
         /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="dict"></param>
         /// <returns></returns>
-        public static T MapToDictionary<T>(IDictionary<string, object> dict) where T : new()
+        public static T MapDictionaryToObject<T>(IDictionary<string, object> dict) where T : new()
         {
             Type type = typeof(T);
             T result = (T)Activator.CreateInstance(type);
+
+            IList<PropertyInfo> props = new List<PropertyInfo>(type.GetProperties());
+
+            foreach (PropertyInfo prop in props)
+            {
+                if (!prop.PropertyType.IsValueType && prop.PropertyType != typeof(string))
+                {
+                    prop.SetValue(result, Activator.CreateInstance(prop.PropertyType));
+                }
+            }
+
             foreach (var item in dict)
             {
                 PropertyReflection.SetProperty(item.Key, result, item.Value);
             }
+
             return result;
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="dict"></param>
-        /// <returns></returns>
-        public static T MapDictionaryToObject<T>(Dictionary<string, object> dict) where T : new()
-        {
-            T obj = new T();
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <typeparam name="T"></typeparam>
+        ///// <param name="dict"></param>
+        ///// <returns></returns>
+        //public static T MapDictionaryToObject<T>(Dictionary<string, object> dict) where T : new()
+        //{
+        //    T obj = new T();
 
-            foreach (var item in dict)
-            {
-                PropertyReflection.SetProperty(item.Key, obj, item.Value);
-            }
+        //    foreach (var item in dict)
+        //    {
+        //        PropertyReflection.SetProperty(item.Key, obj, item.Value);
+        //    }
 
-            return obj;
-        }
+        //    return obj;
+        //}
     }
 }

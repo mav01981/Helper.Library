@@ -1,7 +1,5 @@
 ﻿using Helper.Reflection;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using Tests.Model;
 using Xunit;
 
@@ -16,11 +14,11 @@ namespace Tests.Reflection
                 {
                     Name = "John Doe",
                     Age = 21,
-                    AddressDetail = new Address
+                    Address= new Address
                     {
                         Number = 1,
                         Street = "First St.",
-                        CountryDetail = new Country
+                        Country = new Country
                         {
                             CountryName = "USA"
                         }

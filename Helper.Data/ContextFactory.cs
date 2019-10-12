@@ -1,7 +1,5 @@
 ﻿using Helper.Data.Enum;
-
 using Microsoft.EntityFrameworkCore;
-
 using System;
 
 namespace Helper.Data

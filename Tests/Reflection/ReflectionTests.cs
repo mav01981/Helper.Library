@@ -13,11 +13,11 @@ namespace Tests
                 {
                     Name = "John Doe",
                     Age = 21,
-                    AddressDetail = new Address
+                    Address = new Address
                     {
                         Number = 1,
                         Street = "First St.",
-                        CountryDetail = new Country
+                        Country = new Country
                         {
                             CountryName = "USA"
                         }
@@ -32,7 +32,7 @@ namespace Tests
             var person = CreatSut();
             //Act
             var result = PropertyReflection
-                .GetPropertyDisplayName<Person>(x => x.AddressDetail.CountryDetail.CountryName);
+                .GetPropertyDisplayName<Person>(x => x.Address.Country.CountryName);
             //Assert
             Assert.Equal("AddressDetail.CountryDetail.CountryName", result);
         }
@@ -44,7 +44,7 @@ namespace Tests
             var person = CreatSut();
             //Act
             var result = PropertyReflection.GetPropertyValue<Person>(person,
-                x => x.AddressDetail.CountryDetail.CountryName);
+                x => x.Address.Country.CountryName);
             //Assert
             Assert.Equal("USA", result);
         }
@@ -57,7 +57,7 @@ namespace Tests
             //Act     
             PropertyReflection.SetProperty("AddressDetail.CountryDetail.CountryName", person, "SWEDEN");
             //Assert
-            Assert.Equal("SWEDEN", person.AddressDetail.CountryDetail.CountryName);
+            Assert.Equal("SWEDEN", person.Address.Country.CountryName);
         }
 
         [Fact]
@@ -79,7 +79,7 @@ namespace Tests
             //Act     
             PropertyReflection.SetProperty("AddressDetail.Number", person, 4);
             //Assert
-            Assert.Equal(4, person.AddressDetail.Number);
+            Assert.Equal(4, person.Address.Number);
         }
     }
 }
