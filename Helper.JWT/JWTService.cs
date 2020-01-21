@@ -29,9 +29,4 @@ namespace Helper.JWT
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
-
-    public interface IJWTService
-    {
-        string GenerateJWTToken(JWTInput jWTInput, IEnumerable<Claim> claims);
-    }
 }

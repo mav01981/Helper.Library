@@ -4,7 +4,7 @@ using System;
 
 namespace Helper.Data
 {
-    public class ContextFactory<T> where T : DbContext
+    public class ContextFactory<T> where T : DbContext 
     {
         public T Create(DataSource dataSource, string connectionString)
         {
@@ -20,6 +20,9 @@ namespace Helper.Data
                     break;
                 case DataSource.Postgresql:
                     optionsBuilder.UseNpgsql(connectionString);
+                    break;
+                case DataSource.Oracle:
+                    optionsBuilder.UseOracle(connectionString);
                     break;
                 default:
                     throw new ArgumentNullException("No datasource provided");

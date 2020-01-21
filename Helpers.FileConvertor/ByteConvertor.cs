@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Helper.FileConvertor
 {
@@ -29,6 +30,16 @@ namespace Helper.FileConvertor
             var fileExtension = GetDescription(fileEnum);
 
             File.WriteAllBytes($"{filePath}{fileExtension}", bytes);
+        }
+
+        public static  byte[] ObjectToByteArray<T>(T obj)
+        {
+            if (obj == null)
+                return null;
+            BinaryFormatter bf = new BinaryFormatter();
+            MemoryStream ms = new MemoryStream();
+            bf.Serialize(ms, obj);
+            return ms.ToArray();
         }
 
         private static string GetDescription(Enum @enum)
