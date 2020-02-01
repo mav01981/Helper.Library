@@ -1,8 +1,9 @@
+using Helper.Thread;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using ThreadHelper;
+
 using Xunit;
 
 namespace Tests
@@ -25,7 +26,7 @@ namespace Tests
                 jobs.Add(new Action(MethodDoWork));
             }
 
-            var processor = new Sequential();
+            var processor = new SequentialProcessor();
 
             processor.JobCompleted += (sender, e) =>
                {
@@ -48,7 +49,7 @@ namespace Tests
                 jobs.Add(new Action(MethodDoWork));
             }
 
-            var processor = new Sequential();
+            var processor = new SequentialProcessor();
 
             int numberOfEvents = 0;
 

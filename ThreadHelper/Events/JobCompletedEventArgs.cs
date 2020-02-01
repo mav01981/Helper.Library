@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ThreadHelper.Events
+namespace Helper.Thread
 {
     public class JobCompletedEventArgs : EventArgs, IJobCompletedEventArgs
     {

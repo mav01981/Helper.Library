@@ -23,7 +23,7 @@ namespace Helper.RabbitMQ
             _connectionFactory = connectionFactory;
         }
         /// <summary>
-        /// 
+        /// Publish message.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="message"></param>
@@ -47,7 +47,7 @@ namespace Helper.RabbitMQ
             }
         }
         /// <summary>
-        /// 
+        /// Worker Process message.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="action"></param>

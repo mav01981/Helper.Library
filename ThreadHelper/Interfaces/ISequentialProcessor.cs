@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ThreadHelper
+namespace Helper.Thread
 {
-    public interface ISequential
+    public interface ISequentialProcessor
     {
         Task DoWork(int maxThreads, IEnumerable<Action> jobs);
         Task DoWork(int maxThreads, IEnumerable<Task> jobs);

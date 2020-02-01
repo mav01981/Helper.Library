@@ -20,6 +20,7 @@ namespace Web
         {
             throw new NotImplementedException();
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -46,6 +47,7 @@ namespace Web
                 Content = content
             };
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -58,7 +60,6 @@ namespace Web
         {
             throw new NotImplementedException();
         }
-
         private static T DeserializeJsonFromStream<T>(Stream stream)
         {
             if (stream == null || stream.CanRead == false)

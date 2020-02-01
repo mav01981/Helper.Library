@@ -15,6 +15,7 @@ namespace Helper.RabbitMQ.PubSub
         private readonly IConnectionFactory _connectionFactory;
 
         public event Action<byte[]> RaiseReceieveEvent;
+
         /// <summary>
         /// 
         /// </summary>
@@ -23,8 +24,9 @@ namespace Helper.RabbitMQ.PubSub
         {
             _connectionFactory = connectionFactory;
         }
+
         /// <summary>
-        /// 
+        /// Publish message
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="message"></param>
@@ -43,6 +45,12 @@ namespace Helper.RabbitMQ.PubSub
                                      body: body);
             }
         }
+
+        /// <summary>
+        /// Subscribe to events
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="action"></param>
         public void Recieve<T>(Recieve<T> action)
         {
             using (var connection = _connectionFactory.CreateConnection(action.Host))

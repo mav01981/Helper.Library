@@ -4,13 +4,21 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ThreadHelper
+namespace Helper.Thread
 {
     /// <summary>
     /// Peform Parallel Threaded work via Tasks/Void Methods. 
     /// </summary>
-    public class ParallelTasks : IParallel
+    public class ParallelProcessor : IParallelProcessor
     {
+
+        /// <summary>
+        /// Process multiple Actions concurrently using concurrent queue.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="maxThreads"></param>
+        /// <param name="jobs"></param>
+        /// <returns></returns>
         public async Task DoWorkByQueue<T>(int maxThreads, IEnumerable<Action> jobs)
         {
             var queue = new ConcurrentQueue<Action>(jobs);
@@ -18,7 +26,7 @@ namespace ThreadHelper
 
             for (int taskNumber = 0; taskNumber < maxThreads; taskNumber++)
             {
-                tasks.Add(Task.Run(async () =>
+                tasks.Add(Task.Run(() =>
                 {
                     while (queue.TryDequeue(out Action job))
                     {
@@ -26,8 +34,24 @@ namespace ThreadHelper
                     }
                 }));
             }
-            await Task.WhenAll(tasks);
+
+            try
+            {
+                await Task.WhenAll(tasks);
+            }
+            catch (AggregateException)
+            {
+                throw;
+            }
         }
+
+        /// <summary>
+        /// Process multiple Tasks concurrently.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="maxThreads"></param>
+        /// <param name="jobs"></param>
+        /// <returns></returns>
         public async Task DoWork<T>(int maxThreads, IEnumerable<Task> jobs)
         {
             var allTasks = new List<Task>();
@@ -49,16 +73,42 @@ namespace ThreadHelper
                         }
                     }));
             }
-            await Task.WhenAll(allTasks);
+
+            try
+            {
+                await Task.WhenAll(allTasks);
+            }
+            catch (AggregateException)
+            {
+                throw;
+            }
         }
+
+        /// <summary>
+        /// Process multiple Actions concurrently.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="maxThreads"></param>
+        /// <param name="jobs"></param>
         public void DoWork<T>(int maxThreads, IEnumerable<Action> jobs)
         {
+            var exceptions = new ConcurrentQueue<Exception>();
+
             var options = new ParallelOptions() { MaxDegreeOfParallelism = maxThreads };
 
             Parallel.ForEach(jobs, options, job =>
             {
-                job.Invoke();
+                try
+                {
+                    job.Invoke();
+                }
+                catch (Exception e)
+                {
+                    exceptions.Enqueue(e);
+                }
             });
+
+            if (exceptions.Count > 0) throw new AggregateException(exceptions);
         }
     }
 }
