@@ -1,11 +1,12 @@
-﻿using System;
-
-namespace Web
+﻿namespace Web
 {
+    using System;
+
     [Serializable]
     public class ApiException : Exception
     {
         public int StatusCode { get; set; }
+
         public string Content { get; set; }
     }
 }

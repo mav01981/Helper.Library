@@ -5,6 +5,6 @@
         Sql,
         Sqllite,
         Postgresql,
-        Oracle
+        Oracle,
     }
 }

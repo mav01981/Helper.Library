@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helper.Web", "HttpClient\He
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helper.Data", "Helper.Data\Helper.Data.csproj", "{32CA887D-CBFE-45C6-86B6-244DE6BAC683}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helper.Authentication", "Helper.Authentication\Helper.Authentication.csproj", "{2EE32F59-8BF7-4121-8A73-B243F3B042AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helper.Identity", "Helper.Authentication\Helper.Identity.csproj", "{2EE32F59-8BF7-4121-8A73-B243F3B042AE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helper.JWT", "Helper.JWT\Helper.JWT.csproj", "{47EAF094-9308-4DA9-9B64-B93DFB1C05F3}"
 EndProject
@@ -39,11 +39,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helper.RabbitMQ.Messaging",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Azure", "Azure", "{6C0FA298-03B6-4621-848E-E005BBB78C0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helper.Tests.RabbitMQ.Messaging", "Helper.Tests.RabbitMQ.Messaging\Helper.Tests.RabbitMQ.Messaging.csproj", "{EC8B150D-1A82-483E-A9A5-FA9D4572A47D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helper.Tests.RabbitMQ.Messaging", "Helper.Tests.RabbitMQ.Messaging\Helper.Tests.RabbitMQ.Messaging.csproj", "{EC8B150D-1A82-483E-A9A5-FA9D4572A47D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{63B723B5-38B4-4054-80D8-5813DE4E6EB3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helper.Tests.Data", "Helper.Tests.Data\Helper.Tests.Data.csproj", "{916D2AB7-C4FB-4331-BCBB-D599D4C87086}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helper.Tests.Data", "Helper.Tests.Data\Helper.Tests.Data.csproj", "{916D2AB7-C4FB-4331-BCBB-D599D4C87086}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Web", "Test.Web\Test.Web.csproj", "{943DF35B-DD23-40F5-9A71-3E08B2CE6ED8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedTestData", "SharedTestData\SharedTestData.csproj", "{C0770802-16EA-45B6-AE49-140D6B916871}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -119,6 +123,14 @@ Global
 		{916D2AB7-C4FB-4331-BCBB-D599D4C87086}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{916D2AB7-C4FB-4331-BCBB-D599D4C87086}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{916D2AB7-C4FB-4331-BCBB-D599D4C87086}.Release|Any CPU.Build.0 = Release|Any CPU
+		{943DF35B-DD23-40F5-9A71-3E08B2CE6ED8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{943DF35B-DD23-40F5-9A71-3E08B2CE6ED8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{943DF35B-DD23-40F5-9A71-3E08B2CE6ED8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{943DF35B-DD23-40F5-9A71-3E08B2CE6ED8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0770802-16EA-45B6-AE49-140D6B916871}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0770802-16EA-45B6-AE49-140D6B916871}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0770802-16EA-45B6-AE49-140D6B916871}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0770802-16EA-45B6-AE49-140D6B916871}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -129,6 +141,8 @@ Global
 		{47008EA4-8738-4C44-80A5-3F0D75291205} = {32168F95-E6DA-4BB0-92CE-4915F62542F2}
 		{EC8B150D-1A82-483E-A9A5-FA9D4572A47D} = {63B723B5-38B4-4054-80D8-5813DE4E6EB3}
 		{916D2AB7-C4FB-4331-BCBB-D599D4C87086} = {63B723B5-38B4-4054-80D8-5813DE4E6EB3}
+		{943DF35B-DD23-40F5-9A71-3E08B2CE6ED8} = {63B723B5-38B4-4054-80D8-5813DE4E6EB3}
+		{C0770802-16EA-45B6-AE49-140D6B916871} = {63B723B5-38B4-4054-80D8-5813DE4E6EB3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E3B782A-88CA-4892-B805-33A4BCE2A37F}

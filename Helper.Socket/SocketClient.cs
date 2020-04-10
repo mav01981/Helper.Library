@@ -7,22 +7,6 @@ using System.Threading;
 
 namespace Helper.Socket
 {
-    // State object for receiving data from remote device.  
-    public class StateObject
-    {
-        // Client socket.  
-        public System.Net.Sockets.Socket workSocket = null;
-
-        // Size of receive buffer.  
-        public static int BufferSize = 512000;
-
-        // Receive buffer.  
-        public byte[] buffer = new byte[BufferSize];
-
-        // Received data string.  
-        public StringBuilder sb = new StringBuilder();
-    }
-
     public class SocketClient : ISocketClient
     {
         // ManualResetEvent instances signal completion.  
@@ -36,7 +20,7 @@ namespace Helper.Socket
         private static string _response = string.Empty;
 
         /// <summary>
-        /// 
+        /// Setup connection to server.
         /// </summary>
         /// <param name="host"></param>
         /// <param name="port"></param>
@@ -60,12 +44,22 @@ namespace Helper.Socket
 
             return client;
         }
+
+        /// <summary>
+        /// Send data to remote device.
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="byteData"></param>
         public void Send(System.Net.Sockets.Socket client, byte[] byteData)
         {
-            // Begin sending the data to the remote device.  
             client.BeginSend(byteData, 0, byteData.Length, SocketFlags.None,
                 new AsyncCallback(SendCallback), client);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
         public void Receive(System.Net.Sockets.Socket client)
         {
             try
