@@ -1,10 +1,7 @@
-﻿namespace Helper.Data.Enum
+﻿public enum DataSource
 {
-    public enum DataSource
-    {
-        Sql,
-        Sqllite,
-        Postgresql,
-        Oracle,
-    }
+    Sql,
+    Sqllite,
+    Postgresql,
+    Oracle,
 }

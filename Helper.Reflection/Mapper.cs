@@ -87,16 +87,16 @@ namespace Helper.Reflection
         ///// <typeparam name="T"></typeparam>
         ///// <param name="dict"></param>
         ///// <returns></returns>
-        //public static T MapDictionaryToObject<T>(Dictionary<string, object> dict) where T : new()
-        //{
-        //    T obj = new T();
+        public static T MapDictionaryToObject<T>(Dictionary<string, object> dict) where T : new()
+        {
+            T obj = new T();
 
-        //    foreach (var item in dict)
-        //    {
-        //        PropertyReflection.SetProperty(item.Key, obj, item.Value);
-        //    }
+            foreach (var item in dict)
+            {
+                PropertyReflection.SetProperty(item.Key, obj, item.Value);
+            }
 
-        //    return obj;
-        //}
+            return obj;
+        }
     }
 }

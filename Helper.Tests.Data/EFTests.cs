@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Helper.Tests.Data
 {
-    public class Tests
+    public class EFTests
     {
         [Fact(DisplayName = "Create SQL Context.")]
         public void Create_SQL_Context()

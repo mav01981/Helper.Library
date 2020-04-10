@@ -132,7 +132,6 @@ public class ADONetContext : IADONetContext
         return newListObject;
     }
 
-
     private T MapDataToObject<T>(SqlDataReader dataReader, T newObject)
     {
         if (newObject == null)
