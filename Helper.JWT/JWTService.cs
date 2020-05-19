@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Helper.JWT
 {
@@ -15,7 +16,7 @@ namespace Helper.JWT
         /// <param name="jWTInput"></param>
         /// <param name="claims"></param>
         /// <returns></returns>
-        public string GenerateJWTToken(JWTInput jWTInput, IEnumerable<Claim> claims)
+        public async Task<string> GenerateJWTToken(JWTInput jWTInput, IEnumerable<Claim> claims)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jWTInput.Key));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);

@@ -17,9 +17,15 @@ namespace Helper.JWT
         public static IServiceCollection AddJWT(this IServiceCollection services,
             string issuer, string key)
         {
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-              .AddJwtBearer(options =>
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(options =>
               {
+                  options.RequireHttpsMetadata = false;
+                  options.SaveToken = true;
                   options.TokenValidationParameters = new TokenValidationParameters
                   {
                       ValidateIssuer = true,
@@ -31,6 +37,8 @@ namespace Helper.JWT
                       IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
                   };
               });
+
+            services.AddTransient<IJWTService, JWTService>();
 
             return services;
         }
