@@ -1,72 +1,62 @@
-﻿using API.Template.Utillities;
-
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-
 using System;
 
-public static class Startup
+namespace Helper.Swagger
 {
-    // This method gets called by the runtime. Use this method to add services to the container.
-    // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-    public static IServiceCollection ConfigureServices(this IServiceCollection services)
+    public static class Startup
     {
-        // Register the Swagger generator, defining 1 or more Swagger documents
-        services.AddSwaggerGen(c =>
+        // This method gets called by the runtime. Use this method to add services to the container.
+        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+        public static IServiceCollection ConfigureSwagger(this IServiceCollection services, SwaggerOptions swaggerOptions)
         {
-            c.SwaggerDoc("v1", new OpenApiInfo
+            // Register the Swagger generator, defining 1 or more Swagger documents
+            services.AddSwaggerGen(c =>
             {
-                Version = "v1",
-                Title = "ToDo API",
-                Description = "A simple example ASP.NET Core Web API",
-                TermsOfService = new Uri("https://example.com/terms"),
-                Contact = new OpenApiContact
+                c.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Name = "Jonathan Smart",
-                    Email = string.Empty,
-                    Url = new Uri("https://twitter.com/spboyer"),
-                },
-                License = new OpenApiLicense
-                {
-                    Name = "Use under LICX",
-                    Url = new Uri("https://example.com/license"),
-                }
+                    Version = swaggerOptions.Version,
+                    Title = swaggerOptions.Title,
+                    Description = swaggerOptions.Description,
+                    TermsOfService = new Uri(swaggerOptions.TermsOfServiceUrl),
+                    Contact = new OpenApiContact
+                    {
+                        Name = swaggerOptions.ContactName,
+                        Email = swaggerOptions.ContactEmail,
+                        Url = new Uri(swaggerOptions.ContactUrl),
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = swaggerOptions.LicenseName,
+                        Url = new Uri(swaggerOptions.LicenseUrl),
+                    }
+                });
             });
-        });
 
-        services.AddMvcCore().AddApiExplorer();
+            services.AddMvcCore().AddApiExplorer();
 
-        return services;
-    }
+            return services;
+        }
 
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public static IApplicationBuilder Configure(this IApplicationBuilder app, IHostingEnvironment env)
-    {
-
-        // Enable middleware to serve generated Swagger as a JSON endpoint.
-        app.UseSwagger();
-
-        // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
-        // specifying the Swagger JSON endpoint.
-        app.UseSwaggerUI(c =>
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public static IApplicationBuilder ConfigureSwagger(this IApplicationBuilder app, string stylePath)
         {
-            c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            c.RoutePrefix = string.Empty;
-        });
 
-        app.UseMvc(routes =>
-        {
-            routes.AllRoutes("/allroutes");
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
 
-            routes.MapRoute(
-                name: "default",
-                template: "{*url}",
-                defaults: new { controller = "Home", action = "Index" });
-        });
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.RoutePrefix = string.Empty;
+                c.InjectStylesheet(stylePath);
+            });
 
-        return app;
+            return app;
+        }
     }
 }
 
