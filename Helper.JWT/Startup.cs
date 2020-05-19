@@ -14,7 +14,7 @@ namespace Helper.JWT
         /// <param name="issuer"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static IServiceCollection AddJWT(this IServiceCollection services,
+        public static IServiceCollection ConfigureJsonWebToken(this IServiceCollection services,
             string issuer, string key)
         {
             services.AddAuthentication(x =>

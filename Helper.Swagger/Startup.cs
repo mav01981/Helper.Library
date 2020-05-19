@@ -19,17 +19,17 @@ namespace Helper.Swagger
                     Version = swaggerOptions.Version,
                     Title = swaggerOptions.Title,
                     Description = swaggerOptions.Description,
-                    TermsOfService = new Uri(swaggerOptions.TermsOfServiceUrl),
+                    TermsOfService = swaggerOptions.TermsOfServiceUrl != null ? new Uri(swaggerOptions.TermsOfServiceUrl) : null,
                     Contact = new OpenApiContact
                     {
                         Name = swaggerOptions.ContactName,
                         Email = swaggerOptions.ContactEmail,
-                        Url = new Uri(swaggerOptions.ContactUrl),
+                        Url = swaggerOptions.ContactUrl != null ? new Uri(swaggerOptions.ContactUrl):null,
                     },
                     License = new OpenApiLicense
                     {
                         Name = swaggerOptions.LicenseName,
-                        Url = new Uri(swaggerOptions.LicenseUrl),
+                        Url = swaggerOptions.LicenseUrl != null ? new Uri(swaggerOptions.LicenseUrl) : null,
                     }
                 });
             });
