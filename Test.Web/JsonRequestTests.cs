@@ -1,3 +1,4 @@
+using Helper.Web;
 using Moq;
 using Moq.Protected;
 using SharedTestData;
@@ -5,7 +6,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Web;
 using Xunit;
 
 namespace Test.Web
@@ -13,11 +13,15 @@ namespace Test.Web
     /// <summary>
     /// Tests
     /// </summary>
-    [Trait("Web","Json Requests")]
+    [Trait("Web", "Json Requests")]
     public class JsonRequestTests
     {
+        private Mock<IHttpClientFactory> mockHttpClientFactory;
+
         private Mock<HttpMessageHandler> sut(HttpStatusCode httpStatusCode, string stringContent)
         {
+            mockHttpClientFactory = new Mock<IHttpClientFactory>();
+
             var mockHttpMessageHandler = new Mock<HttpMessageHandler>();
             mockHttpMessageHandler
               .Protected()
@@ -28,6 +32,8 @@ namespace Test.Web
                   Content = new StringContent(stringContent),
               });
 
+            mockHttpClientFactory.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(new HttpClient(mockHttpMessageHandler.Object));
+
             return mockHttpMessageHandler;
         }
 
@@ -36,7 +42,7 @@ namespace Test.Web
         {
             //Arrange
             var mockHttpMessageHandler = sut(HttpStatusCode.OK, "{'id':1,'fullName':'John Smith','age':21}");
-            var request = new JsonRequest(new HttpClient(mockHttpMessageHandler.Object));
+            var request = new JsonRequest(mockHttpClientFactory.Object);
             //Act
             var result = await request.Get<Person>("http://webAddress", It.IsAny<CancellationToken>());
             //Assert
@@ -48,7 +54,7 @@ namespace Test.Web
         {
             //Arrange
             var mockHttpMessageHandler = sut(HttpStatusCode.NotFound, "Not Found");
-            var request = new JsonRequest(new HttpClient(mockHttpMessageHandler.Object));
+            var request = new JsonRequest(mockHttpClientFactory.Object);
             //Act
             var ex = await Assert.ThrowsAsync<ApiException>(() => request.Get<Person>("http://webAddress", It.IsAny<CancellationToken>()));
             //Assert
@@ -60,7 +66,7 @@ namespace Test.Web
         {
             //Arrange
             var mockHttpMessageHandler = sut(HttpStatusCode.Created, "{'id':1,'fullName':'John Smith','age':21}");
-            var request = new JsonRequest(new HttpClient(mockHttpMessageHandler.Object));
+            var request = new JsonRequest(mockHttpClientFactory.Object);
             //Act
             var result = await request.Post<Person>("http://webAddress", new Person { Id = 1, FullName = "John Smith", Age = 21 }, It.IsAny<CancellationToken>());
             //Assert
@@ -72,7 +78,7 @@ namespace Test.Web
         {
             //Arrange
             var mockHttpMessageHandler = sut(HttpStatusCode.OK, "{'id':1,'fullName':'John Smith','age':21}");
-            var request = new JsonRequest(new HttpClient(mockHttpMessageHandler.Object));
+            var request = new JsonRequest(mockHttpClientFactory.Object);
             //Act
             var result = await request.Put<Person>("http://webAddress", new Person { Id = 1, FullName = "John Smith", Age = 21 }, It.IsAny<CancellationToken>());
             //Assert

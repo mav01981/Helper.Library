@@ -1,10 +1,10 @@
-﻿namespace Web
+﻿namespace Helper.Web
 {
     using System.IO;
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
-    using Helper.Web;
+
     using Newtonsoft.Json;
 
     /// <summary>
@@ -12,15 +12,14 @@
     /// </summary>
     public class JsonRequest : IHttpRequest
     {
-        private readonly HttpClient httpClient;
+        private readonly IHttpClientFactory httpClientFactory;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="httpClient"></param>
-        public JsonRequest(HttpClient httpClient = null)
+        /// <inheritdoc/>
+        public RequestFormat Format => RequestFormat.Json;
+
+        public JsonRequest(IHttpClientFactory httpClientFactory)
         {
-            this.httpClient = httpClient ?? new HttpClient();
+            this.httpClientFactory = httpClientFactory;
         }
 
         /// <summary>
@@ -33,6 +32,8 @@
         /// <returns>Response.</returns>
         public async Task<T> Get<T>(string url, CancellationToken cancellationToken, Header header = null)
         {
+            var client = this.httpClientFactory.CreateClient();
+
             using var request = new HttpRequestMessage(HttpMethod.Get, url);
 
             if (header != null)
@@ -40,7 +41,7 @@
                 request.Headers.Add(header.Name, header.Value);
             }
 
-            using var response = await this.httpClient.SendAsync(request, cancellationToken);
+            using var response = await client.SendAsync(request, cancellationToken);
             var content = await response.Content.ReadAsStringAsync();
 
             if (response.IsSuccessStatusCode == false)
@@ -66,7 +67,7 @@
         /// <returns>Response.</returns>
         public async Task<T> Post<T>(string url, T model, CancellationToken cancellationToken, Header header = null)
         {
-            using HttpClient client = new HttpClient();
+            var client = this.httpClientFactory.CreateClient();
             using var request = new HttpRequestMessage(HttpMethod.Post, url);
 
             request.Content = new StringContent(JsonConvert.SerializeObject(model));
@@ -76,7 +77,7 @@
                 request.Headers.Add(header.Name, header.Value);
             }
 
-            using var response = await this.httpClient.SendAsync(request, cancellationToken);
+            using var response = await client.SendAsync(request, cancellationToken);
             var stream = await response.Content.ReadAsStreamAsync();
 
             if (response.IsSuccessStatusCode)
@@ -103,11 +104,11 @@
         /// <returns></returns>
         public async Task<T> Put<T>(string url, T model, CancellationToken cancellationToken)
         {
-            using HttpClient client = new HttpClient();
+            var client = this.httpClientFactory.CreateClient();
             using var request = new HttpRequestMessage(HttpMethod.Put, url);
             request.Content = new StringContent(JsonConvert.SerializeObject(model));
 
-            using var response = await this.httpClient.SendAsync(request, cancellationToken);
+            using var response = await client.SendAsync(request, cancellationToken);
             var stream = await response.Content.ReadAsStreamAsync();
 
             if (response.IsSuccessStatusCode)
@@ -126,7 +127,7 @@
 
         public async Task<T> Patch<T>(string url, T model, CancellationToken cancellationToken)
         {
-            using HttpClient client = new HttpClient();
+            var client = this.httpClientFactory.CreateClient();
             using var request = new HttpRequestMessage(HttpMethod.Patch, url);
             using var response = await client.PatchAsync(url, new StringContent(JsonConvert.SerializeObject(model)), cancellationToken);
             var stream = await response.Content.ReadAsStreamAsync();
@@ -148,15 +149,15 @@
         private static T DeserializeJsonFromStream<T>(Stream stream)
         {
             if (stream == null || stream.CanRead == false)
-                return default(T);
-
-            using (var sr = new StreamReader(stream))
-            using (var jtr = new JsonTextReader(sr))
             {
-                var js = new JsonSerializer();
-                var searchResult = js.Deserialize<T>(jtr);
-                return searchResult;
+                return default;
             }
+
+            using var sr = new StreamReader(stream);
+            using var jtr = new JsonTextReader(sr);
+            var js = new JsonSerializer();
+            var searchResult = js.Deserialize<T>(jtr);
+            return searchResult;
         }
 
         private static async Task<string> StreamToStringAsync(Stream stream)

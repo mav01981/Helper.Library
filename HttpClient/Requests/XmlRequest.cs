@@ -1,4 +1,4 @@
-﻿namespace Web
+﻿namespace Helper.Web
 {
     using System;
     using System.IO;
@@ -6,13 +6,21 @@
     using System.Threading;
     using System.Threading.Tasks;
     using System.Xml.Serialization;
-    using Helper.Web;
 
     public class XmlRequest : IHttpRequest
     {
+        private readonly IHttpClientFactory httpClientFactory;
+
+        public RequestFormat Format => RequestFormat.XML;
+
+        public XmlRequest(IHttpClientFactory httpClientFactory)
+        {
+            this.httpClientFactory = httpClientFactory;
+        }
+
         public async Task<T> Get<T>(string url, CancellationToken cancellationToken, Header header = null)
         {
-            using var client = new HttpClient();
+            var client = this.httpClientFactory.CreateClient();
             using var request = new HttpRequestMessage(HttpMethod.Get, url);
 
             if (header != null)

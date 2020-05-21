@@ -1,11 +1,12 @@
-﻿namespace Web
+﻿namespace Helper.Web
 {
     using System.Threading;
     using System.Threading.Tasks;
-    using Helper.Web;
 
     public interface IHttpRequest
     {
+        RequestFormat Format { get;}
+
         /// <summary>
         ///
         /// </summary>
