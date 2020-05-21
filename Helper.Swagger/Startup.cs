@@ -40,7 +40,7 @@ namespace Helper.Swagger
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public static IApplicationBuilder ConfigureSwagger(this IApplicationBuilder app, string stylePath)
+        public static IApplicationBuilder ConfigureSwagger(this IApplicationBuilder app, SwaggerUISettings settings)
         {
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
@@ -50,9 +50,9 @@ namespace Helper.Swagger
             // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.SwaggerEndpoint(settings.EndPointUrl, settings.EndPointName);
                 c.RoutePrefix = string.Empty;
-                c.InjectStylesheet(stylePath);
+                c.InjectStylesheet(settings.StylePath);
             });
 
             return app;
