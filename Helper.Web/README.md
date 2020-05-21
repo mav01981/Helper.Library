@@ -1,6 +1,6 @@
 # Helper.Web
 
-**Implementation : Startup**
+**Implementation in Startup**
 
 ```c#
         services.AddHttpClient();
@@ -10,7 +10,7 @@
         services.AddScoped<IHttpRequest[]>(provider =>
         {
            var factory=(IHttpClientStrategyFactory)provider.GetService(typeof(IHttpRequest));
-            return factory.Create(RequestFormat.Json);
+           return factory.Create(RequestFormat.Json);
         });
 ```
 **Implement in service/controller**

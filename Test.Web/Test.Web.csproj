@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HttpClient\Helper.Web.csproj" />
+    <ProjectReference Include="..\Helper.Web\Helper.Web.csproj" />
     <ProjectReference Include="..\SharedTestData\SharedTestData.csproj" />
   </ItemGroup>
 
