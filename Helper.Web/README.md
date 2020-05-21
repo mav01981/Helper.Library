@@ -6,7 +6,7 @@
         services.AddHttpClient();
         services.AddScoped<IHttpRequest, XmlRequest>();
         services.AddScoped<IHttpRequest, JsonRequest>();
-        services.AddScoped<IHttpClientStrategyFactory, HttpClientStrategyFactory>();
+        services.AddScoped<IHttpClientStrategy, HttpClientStrategy>();
         services.AddScoped<IHttpRequest[]>(provider =>
         {
            var factory=(IHttpClientStrategyFactory)provider.GetService(typeof(IHttpRequest));
@@ -15,12 +15,14 @@
 ```
 **Implement in service/controller**
 
-    public class HttpService : IHttpService
+```c#
+public class HttpService : IHttpService
+{
+    private readonly IHttpClientStrategy _httpClientStrategy;
+
+    public HttpService (IHttpClientStrategy httpClientStrategy)
     {
-        private readonly IHttpClientStrategy _httpClientStrategy;
-    
-        public HttpService (IHttpClientStrategy httpClientStrategy)
-        {
-            _httpClientStrategy = httpClientStrategy;
-        }
+        _httpClientStrategy = httpClientStrategy;
     }
+}
+```
