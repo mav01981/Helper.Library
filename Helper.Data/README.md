@@ -22,3 +22,12 @@ public class DataRepository : IDataRepository
 }
 ```
 
+# **EF ContextFactory**
+
+```c#
+using(var context = factory.Create(DataSource.Sql, $"Server=myServerAddress;Database=myDataBase;Trusted_Connection=True;"))
+{
+    //TODO: Execute actions.
+}
+```
+# **EF Generic Repository and Unit of work**

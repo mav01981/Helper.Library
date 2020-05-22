@@ -7,7 +7,8 @@
     /// Context factory for entity framework.
     /// </summary>
     /// <typeparam name="T">Object.</typeparam>
-    public class ContextFactory<T> where T : DbContext
+    public class ContextFactory<T>
+        where T : DbContext
     {
         public T Create(DataSource dataSource, string connectionString)
         {
