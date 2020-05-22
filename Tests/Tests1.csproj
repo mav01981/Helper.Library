@@ -37,7 +37,6 @@
 
   <ItemGroup>
     <Folder Include="Output\" />
-    <Folder Include="Web\" />
   </ItemGroup>
 
   <ItemGroup>
