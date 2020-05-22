@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using Dapper;
-
-namespace Helper.Data
+﻿namespace Helper.Data
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Linq;
+    using Dapper;
+
     public abstract class AbstractDapperRepository
     {
         private readonly IDbConnection connection;

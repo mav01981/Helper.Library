@@ -7,12 +7,13 @@ public class ADOConnectionFactory : IADOConnectionFactory
 
     public ADOConnectionFactory(string dbConnectionString)
     {
-        this.dbConnectionString = dbConnectionString;
+        this.dbConnectionString = dbConnectionString ?? throw new System.ArgumentNullException(nameof(dbConnectionString));
     }
 
-    public SqlConnection CreateConnection(string connectionString)
+    /// <inheritdoc/>
+    public IDbConnection CreateConnection(string connectionString)
     {
-        SqlConnection connection = new SqlConnection(connectionString);
+        var connection = new SqlConnection(connectionString);
 
         if (connection.State != ConnectionState.Open)
         {

@@ -4,18 +4,19 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 
 public class ADONetContext : IADONetContext
 {
+    private string ConnectionString { get; }
+
     private readonly IADOConnectionFactory adoConnectionFactory;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AdoNet"/> class.
     /// </summary>
     /// <param name="connectionString">Connection String for Ado.net connection.</param>
-    public ADONetContext(IADOConnectionFactory adoConnectionFactory,  string connectionString)
+    public ADONetContext(IADOConnectionFactory adoConnectionFactory, string connectionString)
     {
         if (string.IsNullOrEmpty(connectionString))
         {
@@ -26,32 +27,32 @@ public class ADONetContext : IADONetContext
         this.ConnectionString = connectionString;
     }
 
-    private string ConnectionString { get; }
-
-    public async Task<bool> ExecuteNonQueryAsync<T>(string sql, CancellationToken cancelationToken, SqlParameter[] sqlParameters = null)
+    /// <inheritdoc/>
+    public async Task<bool> ExecuteNonQueryAsync<T>(string sql, SqlParameter[] sqlParameters = null)
         where T : class, new()
     {
         bool result = false;
 
-        using (SqlConnection connection = this.adoConnectionFactory.CreateConnection(this.ConnectionString))
+        using (IDbConnection connection = this.adoConnectionFactory.CreateConnection(this.ConnectionString))
         {
-            SqlCommand sqlCommand = new SqlCommand(sql, connection);
-
-            if (sqlParameters == null)
+            using (IDbCommand command = connection.CreateCommand())
             {
-                sqlCommand.CommandType = CommandType.Text;
-            }
-            else
-            {
-                sqlCommand.CommandType = CommandType.StoredProcedure;
-
-                foreach (var param in sqlParameters)
+                if (sqlParameters == null)
                 {
-                    sqlCommand.Parameters.AddWithValue(param.ParameterName, param.Value);
+                    command.CommandType = CommandType.Text;
                 }
-            }
+                else
+                {
+                    command.CommandType = CommandType.StoredProcedure;
 
-            result = await sqlCommand.ExecuteNonQueryAsync(cancelationToken) == 1;
+                    foreach (var param in sqlParameters)
+                    {
+                        command.Parameters.Add(param);
+                    }
+                }
+
+                result = command.ExecuteNonQuery() >= 1;
+            }
         }
 
         return result;
@@ -62,31 +63,25 @@ public class ADONetContext : IADONetContext
     {
         var @object = new T();
 
-        using (SqlConnection connection = this.adoConnectionFactory.CreateConnection(this.ConnectionString))
+        using (IDbConnection connection = this.adoConnectionFactory.CreateConnection(this.ConnectionString))
         {
-            SqlCommand sqlCommand = new SqlCommand(sql, connection);
-
-            if (sqlParameters == null)
+            using (IDbCommand command = connection.CreateCommand())
             {
-                sqlCommand.CommandType = CommandType.Text;
-            }
-            else
-            {
-                sqlCommand.CommandType = CommandType.StoredProcedure;
+                command.CommandType = sqlParameters == null ? CommandType.Text : CommandType.StoredProcedure;
 
-                foreach (var param in sqlParameters)
+                if (command.CommandType == CommandType.StoredProcedure)
                 {
-                    sqlCommand.Parameters.AddWithValue(param.ParameterName, param.Value);
-                }
-            }
-
-            using (var dataReader = await sqlCommand.ExecuteReaderAsync(CommandBehavior.Default))
-            {
-                if (dataReader.HasRows)
-                {
-                    while (await dataReader.ReadAsync())
+                    foreach (var param in sqlParameters)
                     {
-                        @object = this.MapDataToObject(dataReader, new T());
+                        command.Parameters.Add(param);
+                    }
+                }
+
+                using (IDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        @object = this.MapDataToObject(reader, new T());
                     }
                 }
             }
@@ -99,31 +94,25 @@ public class ADONetContext : IADONetContext
         where T : class, new()
     {
         var newListObject = new List<T>();
-        using (SqlConnection connection = this.adoConnectionFactory.CreateConnection(this.ConnectionString))
+        using (IDbConnection connection = this.adoConnectionFactory.CreateConnection(this.ConnectionString))
         {
-            SqlCommand sqlCommand = new SqlCommand(sql, connection);
-
-            if (sqlParameters == null)
+            using (IDbCommand command = connection.CreateCommand())
             {
-                sqlCommand.CommandType = CommandType.Text;
-            }
-            else
-            {
-                sqlCommand.CommandType = CommandType.StoredProcedure;
+                command.CommandType = sqlParameters == null ? CommandType.Text : CommandType.StoredProcedure;
 
-                foreach (var param in sqlParameters)
+                if (command.CommandType == CommandType.StoredProcedure)
                 {
-                    sqlCommand.Parameters.AddWithValue(param.ParameterName, param.Value);
-                }
-            }
-
-            using (var dataReader = await sqlCommand.ExecuteReaderAsync(CommandBehavior.Default))
-            {
-                if (dataReader.HasRows)
-                {
-                    while (await dataReader.ReadAsync())
+                    foreach (var param in sqlParameters)
                     {
-                        newListObject.Add(this.MapDataToObject(dataReader, new T()));
+                        command.Parameters.Add(param);
+                    }
+                }
+
+                using (IDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        newListObject.Add(this.MapDataToObject(reader, new T()));
                     }
                 }
             }
@@ -132,19 +121,19 @@ public class ADONetContext : IADONetContext
         return newListObject;
     }
 
-    private T MapDataToObject<T>(SqlDataReader dataReader, T newObject)
+    private T MapDataToObject<T>(IDataReader dataReader, T newObject)
     {
         if (newObject == null)
         {
             throw new ArgumentNullException(nameof(newObject));
         }
 
-        var objectMemberAccessor = newObject.GetType().GetProperties(BindingFlags.Public | BindingFlags.Static);
+        var objectMemberAccessor = newObject.GetType().GetProperties(BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Instance);
         var propertiesHashSet = objectMemberAccessor
                 .Select(mp => mp.Name)
                 .ToHashSet(StringComparer.InvariantCultureIgnoreCase);
 
-        for (int i = 0; i < dataReader.FieldCount; i++)
+        for (int i = 0; i <= dataReader.FieldCount; i++)
         {
             var name = propertiesHashSet.FirstOrDefault(a => a.Equals(dataReader.GetName(i), StringComparison.InvariantCultureIgnoreCase));
             if (!string.IsNullOrEmpty(name))

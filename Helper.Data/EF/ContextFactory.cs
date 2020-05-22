@@ -1,15 +1,13 @@
-﻿using Helper.Data.Enum;
-using Microsoft.EntityFrameworkCore;
-using System;
-
-namespace Helper.Data
+﻿namespace Helper.Data
 {
+    using System;
+    using Microsoft.EntityFrameworkCore;
+
     /// <summary>
     /// Context factory for entity framework.
     /// </summary>
     /// <typeparam name="T">Object.</typeparam>
-    public class ContextFactory<T>
-        where T : DbContext
+    public class ContextFactory<T> where T : DbContext
     {
         public T Create(DataSource dataSource, string connectionString)
         {
