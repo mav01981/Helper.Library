@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 public class ADONetContext : IADONetContext
 {
-    private string ConnectionString { get; }
+    private string _connectionString { get; }
 
-    private readonly IADOConnectionFactory adoConnectionFactory;
+    private readonly IADOConnectionFactory _adoConnectionFactory;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AdoNet"/> class.
@@ -23,8 +23,8 @@ public class ADONetContext : IADONetContext
             throw new ArgumentException("Please provide a connection string.", nameof(connectionString));
         }
 
-        this.adoConnectionFactory = adoConnectionFactory;
-        this.ConnectionString = connectionString;
+        _adoConnectionFactory = adoConnectionFactory;
+        _connectionString = connectionString;
     }
 
     /// <inheritdoc/>
@@ -33,7 +33,7 @@ public class ADONetContext : IADONetContext
     {
         bool result = false;
 
-        using (IDbConnection connection = this.adoConnectionFactory.CreateConnection(this.ConnectionString))
+        using (IDbConnection connection = _adoConnectionFactory.CreateConnection(_connectionString))
         {
             using (IDbCommand command = connection.CreateCommand())
             {
@@ -63,7 +63,7 @@ public class ADONetContext : IADONetContext
     {
         var @object = new T();
 
-        using (IDbConnection connection = this.adoConnectionFactory.CreateConnection(this.ConnectionString))
+        using (IDbConnection connection = _adoConnectionFactory.CreateConnection(_connectionString))
         {
             using (IDbCommand command = connection.CreateCommand())
             {
@@ -94,7 +94,7 @@ public class ADONetContext : IADONetContext
         where T : class, new()
     {
         var newListObject = new List<T>();
-        using (IDbConnection connection = this.adoConnectionFactory.CreateConnection(this.ConnectionString))
+        using (IDbConnection connection = _adoConnectionFactory.CreateConnection(_connectionString))
         {
             using (IDbCommand command = connection.CreateCommand())
             {

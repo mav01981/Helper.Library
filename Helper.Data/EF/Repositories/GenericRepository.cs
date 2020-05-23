@@ -12,12 +12,12 @@
     public class GenericRepository<T> : IRepository<T>
         where T : class
     {
-        private readonly DbContext entities = null;
+        private readonly DbContext _entities = null;
         private DbSet<T> _objectSet;
 
-        public GenericRepository(DbContext _entities)
+        public GenericRepository(DbContext entities)
         {
-            entities = _entities;
+            _entities = entities;
             _objectSet = entities.Set<T>();
         }
 
